@@ -8,10 +8,12 @@ import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Server extends WebSocketServer{
+public class Server extends WebSocketServer {
 
     private static int TCP_PORT = 4444;
     private Set<WebSocket> conns;
+    private Player player1, player2;
+    private int playerCount = 0;
 
     public Server() {
         super(new InetSocketAddress(TCP_PORT));
@@ -20,8 +22,17 @@ public class Server extends WebSocketServer{
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conns.add(conn);
-        System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        if (playerCount < 2) {
+            conns.add(conn);
+            System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+            playerCount++;
+            if (playerCount == 1) {
+                player1 = new Player(conn, playerCount);
+            }
+            if (playerCount == 2) {
+                player2 = new Player(conn, playerCount);
+            }
+        }
     }
 
     @Override
@@ -32,7 +43,12 @@ public class Server extends WebSocketServer{
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println("Message from client: " + message);
+        if (player1 != null && player1.getWebSocket() == conn) {
+            System.out.println("Player1: " + message);
+        }
+        else if (player2 != null && player2.getWebSocket() == conn) {
+            System.out.println("Player2: " + message);
+        }
         for (WebSocket sock : conns) {
             sock.send(message);
         }
@@ -47,7 +63,8 @@ public class Server extends WebSocketServer{
         }
         System.out.println("ERROR from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         Server server = new Server();
         server.start();
     }
