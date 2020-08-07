@@ -22,15 +22,22 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        if (playerCount < 2) {
+        if (playerCount < 50) {
+        //if (playerCount < 2) {
             conns.add(conn);
             System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
             playerCount++;
+            String connectionMsg = "";
             if (playerCount == 1) {
                 player1 = new Player(conn, playerCount);
+                connectionMsg = "Player1 connected.";
             }
             if (playerCount == 2) {
                 player2 = new Player(conn, playerCount);
+                connectionMsg = "Player2 connected.";
+            }
+            for (WebSocket sock : conns) {
+                sock.send(connectionMsg);
             }
         }
     }
@@ -43,14 +50,17 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
+        String sender = "";
         if (player1 != null && player1.getWebSocket() == conn) {
-            System.out.println("Player1: " + message);
+            sender = "Player1: ";
+            System.out.println(sender + message);
         }
         else if (player2 != null && player2.getWebSocket() == conn) {
-            System.out.println("Player2: " + message);
+            sender = "Player2: ";
+            System.out.println(sender + message);
         }
         for (WebSocket sock : conns) {
-            sock.send(message);
+            sock.send(sender + message);
         }
     }
 

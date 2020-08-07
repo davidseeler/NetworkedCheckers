@@ -1,20 +1,7 @@
-var button = document.createElement("button");
-button.innerHTML = "Do Something";
-
-// 2. Append somewhere
-var body = document.getElementsByTagName("body")[0];
-body.appendChild(button);
-
-// 3. Add event handler
-button.addEventListener ("click", function() {
-  connection.send('hi');
-});
-
 const connection = new WebSocket('ws://127.0.0.1:4444');
 
 connection.onopen = function () {
     console.log('Connected!');
-    connection.send('Ping'); // Send the message 'Ping' to the server
 };
 
 // Log errors
@@ -24,5 +11,34 @@ connection.onerror = function (error) {
 
 // Log messages from the server
 connection.onmessage = function (e) {
-    console.log('Server: ' + e.data);
+    let msg = (getTime() + e.data + "\n");
+    document.getElementById("chatLog").value += msg;
 };
+
+function send(){
+    if (document.getElementById("textField").value != null){
+        connection.send(document.getElementById("textField").value);
+        document.getElementById("textField").value = "";
+    }
+}
+
+function getTime(){
+    let date = new Date();
+    let hours = "";
+    let minutes = "";
+    let symbol = "";
+    if (date.getHours() >= 12){
+        hours = date.getHours() - 12;
+        symbol = "PM";
+    }
+    else{
+        hours = date.getHours();
+        symbol = "AM";
+    }
+    if (date.getMinutes() < 10){
+        return "(" + hours + ":0" + date.getMinutes() + " " + symbol + ") ";
+    }
+    else{
+        return "(" + hours + ":" + date.getMinutes() + " " + symbol + ") ";
+    }
+}

@@ -4,8 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-    <script src="index.js"></script>
+<script src="index.js"></script>
+<h1>CHECKERS</h1>
+<div class="window">
+    <div class="board">
+        <table cellspacing="0">
+            <tr>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+            </tr>
+            <tr>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+            </tr>
+            <tr>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+            </tr>
+            <tr>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+                <td></td>
+                <td class="space"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="chatbox">
+        <textarea id="chatLog" readonly rows = "32" cols="40"></textarea>
+        <div class="messageBar">
+            <input id="textField" type="text" size="40">
+            <input id="sendButton" onclick="send()" type="button" value="send">
+        </div>
+    </div>
+</div>
 </body>
 </html>
