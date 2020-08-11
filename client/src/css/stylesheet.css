@@ -46,6 +46,54 @@ td{
     height: 62px;
 }
 
+html {
+    position: relative;
+    min-width: 930px;
+    min-height: 530px;
+    height: 100%;
+}
+
+body{
+    background-image: url("casinoFelt.jpg");
+}
+
+.board{
+    margin-left: 8px;
+    float: left;
+}
+
+.chatbox{
+    border-style: ridge;
+    border: 4px solid black;
+    float: left;
+    margin-left: 20px;
+
+}
+
+.searchBar{
+    float: left;
+}
+
+.board{
+    border: 5px solid black;
+}
+
+h1{
+    font-family: Georgia, serif;
+    font-size: 37px;
+    letter-spacing: 4px;
+    text-align:center;
+    color: red;
+    width: 100%;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+td{
+    background-color: #242527;
+    width: 62px;
+    height: 62px;
+}
+
 .space{
     background-color: #E3242B;
 }
@@ -80,3 +128,10 @@ td{
 .king.black-piece{
     background-color: purple;
 }
+
+@keyframes glowing {
+    0% { box-shadow: 0 0 -10px #ffd501; }
+    40% { box-shadow: 0 0 20px #ffd501; }
+    60% { box-shadow: 0 0 20px #ffd501; }
+    100% { box-shadow: 0 0 -10px #ffd501; }
+  }

@@ -7,90 +7,89 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-<script src="index.js"></script>
 <h1>CHECKERS</h1>
 <div class="window">
     <div class="board">
         <table cellspacing="0">
             <tr>
-                <td class="space"></td>
-                <td><p class="red-piece" id="0"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="1"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="2"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="3"></p></td>
+                <td id="tile0" class="space"></td>
+                <td id="tile1"><p class="red-piece" id="0"></p></td>
+                <td id="tile2" class="space"></td>
+                <td id="tile3"><p class="red-piece" id="1"></p></td>
+                <td id="tile4" class="space"></td>
+                <td id="tile5"><p class="red-piece" id="2"></p></td>
+                <td id="tile6"class="space"></td>
+                <td id="tile7"><p class="red-piece" id="3"></p></td>
             </tr>
             <tr>
-                <td><p class="red-piece" id="4"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="5"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="6"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="7"></p></td>
-                <td class="space"></td>
+                <td id="tile8"><p class="red-piece" id="4"></p></td>
+                <td id="tile9" class="space"></td>
+                <td id="tile10"><p class="red-piece" id="5"></p></td>
+                <td id="tile11" class="space"></td>
+                <td id="tile12"><p class="red-piece" id="6"></p></td>
+                <td id="tile13" class="space"></td>
+                <td id="tile14"><p class="red-piece" id="7"></p></td>
+                <td id="tile15" class="space"></td>
             </tr>
             <tr>
-                <td class="space"></td>
-                <td><p class="red-piece" id="8"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="9"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="10"></p></td>
-                <td class="space"></td>
-                <td><p class="red-piece" id="11"></p></td>
+                <td id="tile16" class="space"></td>
+                <td id="tile17"><p class="red-piece" id="8"></p></td>
+                <td id="tile18" class="space"></td>
+                <td id="tile19"><p class="red-piece" id="9"></p></td>
+                <td id="tile20" class="space"></td>
+                <td id="tile21"><p class="red-piece" id="10"></p></td>
+                <td id="tile22" class="space"></td>
+                <td id="tile23"><p class="red-piece" id="11"></p></td>
             </tr>
             <tr>
-                <td></td>
-                <td class="space"></td>
-                <td></td>
-                <td class="space"></td>
-                <td></td>
-                <td class="space"></td>
-                <td></td>
-                <td class="space"></td>
+                <td id="tile24"></td>
+                <td id="tile25" class="space"></td>
+                <td id="tile26"></td>
+                <td id="tile27" class="space"></td>
+                <td id="tile28"></td>
+                <td id="tile29" class="space"></td>
+                <td id="tile30"></td>
+                <td id="tile31" class="space"></td>
             </tr>
             <tr>
-                <td class="space"></td>
-                <td></td>
-                <td class="space"></td>
-                <td></td>
-                <td class="space"></td>
-                <td></td>
-                <td class="space"></td>
-                <td></td>
+                <td id="tile32" class="space"></td>
+                <td id="tile33"></td>
+                <td id="tile34" class="space"></td>
+                <td id="tile35"></td>
+                <td id="tile36" class="space"></td>
+                <td id="tile37"></td>
+                <td id="tile38" class="space"></td>
+                <td id="tile39"></td>
             </tr>
             <tr>
-                <td><p class="black-piece" id="12"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="13"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="14"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="15"></p></td>
-                <td class="space"></td>
+                <td id="tile40"><p class="black-piece" id="12"></p></td>
+                <td id="tile41" class="space"></td>
+                <td id="tile42"><p class="black-piece" id="13"></p></td>
+                <td id="tile43" class="space"></td>
+                <td id="tile44"><p class="black-piece" id="14"></p></td>
+                <td id="tile45" class="space"></td>
+                <td id="tile46"><p class="black-piece" id="15"></p></td>
+                <td id="tile47" class="space"></td>
             </tr>
             <tr>
-                <td class="space"></td>
-                <td><p class="black-piece" id="16"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="17"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="18"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="19"></p></td>
+                <td id="tile48" class="space"></td>
+                <td id="tile49"><p class="black-piece" id="16"></p></td>
+                <td id="tile50" class="space"></td>
+                <td id="tile51"><p class="black-piece" id="17"></p></td>
+                <td id="tile52"class="space"></td>
+                <td id="tile53"><p class="black-piece" id="18"></p></td>
+                <td id="tile54" class="space"></td>
+                <td id="tile55"><p class="black-piece" id="19"></p></td>
             </tr>
             <tr>
-                <td><p class="black-piece" id="20"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="21"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="22"></p></td>
-                <td class="space"></td>
-                <td><p class="black-piece" id="23"></p></td>
-                <td class="space"></td>
+                <td id="tile56"><p class="black-piece" id="20"></p></td>
+                <td id="tile57" class="space"></td>
+                <td id="tile58"><p class="black-piece" id="21"></p></td>
+                <td id="tile59" class="space"></td>
+                <td id="tile60"><p class="black-piece" id="22"></p></td>
+                <td id="tile61" class="space"></td>
+                <td id="tile62"><p class="black-piece" id="23"></p></td>
+                <td id="tile63" class="space"></td>
             </tr>
         </table>
     </div>
@@ -103,4 +102,5 @@
     </div>
 </div>
 </body>
+<script src="index.js"></script>
 </html>

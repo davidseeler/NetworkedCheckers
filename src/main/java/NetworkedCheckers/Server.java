@@ -14,6 +14,7 @@ public class Server extends WebSocketServer {
     private Set<WebSocket> conns;
     private Player player1, player2;
     private int playerCount = 0;
+    private boolean turn = true;
 
     public Server() {
         super(new InetSocketAddress(TCP_PORT));
@@ -50,17 +51,36 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        String sender = "";
-        if (player1 != null && player1.getWebSocket() == conn) {
-            sender = "Player1: ";
-            System.out.println(sender + message);
+        if (message.equals("_{}*getid")){
+              conn.send(getPlayerId(conn));
+
         }
-        else if (player2 != null && player2.getWebSocket() == conn) {
-            sender = "Player2: ";
-            System.out.println(sender + message);
+        else if (message.equals("_{}*getturn")){
+            conn.send(whosTurn());
         }
-        for (WebSocket sock : conns) {
-            sock.send(sender + message);
+        else if (message.contains("_{}*update")){
+            if (turn){
+                player2.getWebSocket().send(updateBoard(message));
+            }
+            else{
+                player1.getWebSocket().send(updateBoard(message));
+            }
+            turn = !turn;
+            player1.getWebSocket().send(whosTurn());
+            player2.getWebSocket().send(whosTurn());
+        }
+        else {
+            String sender = "";
+            if (player1 != null && player1.getWebSocket() == conn) {
+                sender = "Player1: ";
+                System.out.println(sender + message);
+            } else if (player2 != null && player2.getWebSocket() == conn) {
+                sender = "Player2: ";
+                System.out.println(sender + message);
+            }
+            for (WebSocket sock : conns) {
+                sock.send(sender + message);
+            }
         }
     }
 
@@ -72,6 +92,40 @@ public class Server extends WebSocketServer {
             // do some thing if required
         }
         System.out.println("ERROR from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+    }
+
+    private String getPlayerId(WebSocket conn){
+        if (player1.getWebSocket() == conn){
+            return "_{}*id1";
+        }
+        else if (player2.getWebSocket() == conn){
+            return "_{}*id2";
+        }
+        return "";
+    }
+
+    private String whosTurn(){
+        return (turn ? "_{}*turn1" : "_{}*turn2");
+    }
+
+    private String updateBoard(String str){
+        str = str.substring(11, str.length());
+        String newStr = "_{}*update ";
+        boolean prevIsNumber = false;
+        for (int i = 0; i < str.length(); i++){
+            if (str.charAt(i) == ','){
+                newStr += "_";
+            }
+            else if (str.charAt(i) != ',' && str.charAt(i + 1) != ','){
+                newStr += "" + str.charAt(i) + str.charAt(i + 1) + " ";
+                i += 2;
+            }
+            else if (str.charAt(i) != ','){
+                newStr += str.charAt(i) + " ";
+                i++;
+            }
+        }
+        return newStr;
     }
 
     public static void main(String[] args) {
