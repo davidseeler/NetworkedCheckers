@@ -120,7 +120,7 @@ function updateP1Pieces(str){
     newP1Pieces[count] = number;
     p1pieces = newP1Pieces;
 
-    if (p1pieces.length == 1){
+    if (p1pieces[0] == ""){
         connection.send("_{}*gameover2");
     }
 }
@@ -142,7 +142,7 @@ function updateP2Pieces(str){
     newP2Pieces[count] = number;
     p2pieces = newP2Pieces;
 
-    if (p2pieces.length == 1){
+    if (p2pieces[0] == ""){
         connection.send("_{}*gameover1");
     }
 }

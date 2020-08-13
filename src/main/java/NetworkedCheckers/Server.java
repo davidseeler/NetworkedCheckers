@@ -110,11 +110,13 @@ public class Server extends WebSocketServer {
         else if (message.equals("_{}*gameover1")){
             for (WebSocket sock : conns) {
                 sock.send("SYSTEM: Player1 wins!");
+                sock.close();
             }
         }
         else if (message.equals("_{}*gameover2")){
             for (WebSocket sock : conns) {
                 sock.send("SYSTEM: Player2 wins!");
+                sock.close();
             }
         }
         else {
