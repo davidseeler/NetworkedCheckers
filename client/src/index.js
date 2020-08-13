@@ -6,6 +6,7 @@ connection.onopen = function () {
     connection.send("_{}*getturn")
 };
 
+let gameOver = false;
 let playerId = null;
 let turn = null;
 
@@ -42,6 +43,9 @@ connection.onmessage = function (e) {
     }
     else if (e.data.includes("_{}*kings2")){
         p2kings[p2kings.length] = e.data.substring(11, e.data.length);
+    }
+    else if (e.data.includes("_{}gameover")){
+        gameOver = true;
     }
     else{
         let msg = (getTime() + e.data + "\n");
@@ -115,6 +119,10 @@ function updateP1Pieces(str){
     }
     newP1Pieces[count] = number;
     p1pieces = newP1Pieces;
+
+    if (p1pieces.length == 1){
+        connection.send("_{}*gameover2");
+    }
 }
 
 function updateP2Pieces(str){
@@ -133,6 +141,10 @@ function updateP2Pieces(str){
     }
     newP2Pieces[count] = number;
     p2pieces = newP2Pieces;
+
+    if (p2pieces.length == 1){
+        connection.send("_{}*gameover1");
+    }
 }
 
 
@@ -303,10 +315,14 @@ function resetSelectedPiece(){
     selectedPiece.bottomRightHop = false;
 
     for (i = 0; i < p1kings.length; i++){
+        if (document.getElementById(p1kings[i]) != null){
         document.getElementById(p1kings[i]).style.border = "1px solid orange";
+        }
     }
     for (i = 0; i < p2kings.length; i++){
-        document.getElementById(p2kings[i]).style.border = "1px solid orange";
+        if (document.getElementById(p2kings[i]) != null){
+            document.getElementById(p2kings[i]).style.border = "1px solid orange";
+        }
     }
 }
 
@@ -320,7 +336,7 @@ function p2Enable(){
 
 function checkKing(val){
     if (p1pieces.indexOf(board[selectedPiece.tile + val]) != -1 &&
-    p1kings.indexOf(board[selectedPiece.tile + val]) != -1){
+    p1kings.indexOf(board[selectedPiece.tile + val]) == -1){
         if (selectedPiece.tile + val >= 56 && selectedPiece.tile + val < 63){
             p1kings[p1kings.length] = board[selectedPiece.tile + val];
             selectedPiece.isKing = true;
@@ -330,7 +346,7 @@ function checkKing(val){
         }
     }
     else if (p2pieces.indexOf(board[selectedPiece.tile + val]) != -1 &&
-    p2kings.indexOf(board[selectedPiece.tile + val]) != -1){
+    p2kings.indexOf(board[selectedPiece.tile + val]) == -1){
         if (selectedPiece.tile + val > 0 && selectedPiece.tile + val <= 7){
             p2kings[p2kings.length] = board[selectedPiece.tile + val];
             selectedPiece.isKing = true;
@@ -343,12 +359,16 @@ function checkKing(val){
 
 function setKing(){
     for (i = 0; i < p1kings.length; i++){
-        document.getElementById(p1kings[i]).style.backgroundImage = "url('redCrown.png')";
-        document.getElementById(p1kings[i]).style.border = "1px solid orange";
+        if (document.getElementById(p1kings[i]) != null){
+            document.getElementById(p1kings[i]).style.backgroundImage = "url('redCrown.png')";
+            document.getElementById(p1kings[i]).style.border = "1px solid orange";
+        }
     }
     for (i = 0; i < p2kings.length; i++){
-        document.getElementById(p2kings[i]).style.backgroundImage = "url('blackCrown.png')";
-        document.getElementById(p2kings[i]).style.border = "1px solid orange";
+        if (document.getElementById(p2kings[i]) != null){
+            document.getElementById(p2kings[i]).style.backgroundImage = "url('blackCrown.png')";
+            document.getElementById(p2kings[i]).style.border = "1px solid orange";
+        }
     }
     if (p1kings.indexOf(board[selectedPiece.tile]) != -1 || p2kings.indexOf(board[selectedPiece.tile]) != -1){
         selectedPiece.isKing = true;
@@ -1179,15 +1199,13 @@ function updateP2(anotherHop){
     }
 }
 
-let gameOver = false;
-
 function start(){
-    if (turn){
+    if (turn && !gameOver){
         if (!hopped){
             p1Enable();
         }
     }
-    else{
+    else if (!gameOver){
         if (!hopped){
             p2Enable();
         }

@@ -29,16 +29,21 @@ public class Server extends WebSocketServer {
         String connectionMsg = "";
         if (playerCount == 1) {
             player1 = new Player(conn, playerCount);
-            connectionMsg = "Player1 connected.";
+            player1.getWebSocket().send( "Player1 connected.");
+            player1.getWebSocket().send("SYSTEM: You are Player1 (red pieces).");
         }
         if (playerCount == 2) {
             player2 = new Player(conn, playerCount);
-            connectionMsg = "Player2 connected.";
+            player1.getWebSocket().send( "Player2 connected.");
+            player2.getWebSocket().send( "Player2 connected.");
+            player2.getWebSocket().send("SYSTEM: You are Player2 (black pieces).");
         }
-        for (WebSocket sock : conns) {
-            sock.send(connectionMsg);
+        if (playerCount == 2){
+            for (WebSocket sock : conns) {
+                sock.send("SYSTEM: The match has started!");
+                sock.send("SYSTEM: Player1 goes first.");
+            }
         }
-
     }
 
     @Override
@@ -46,7 +51,7 @@ public class Server extends WebSocketServer {
         conns.remove(conn);
         if (player1.getWebSocket() == conn || player2.getWebSocket() == conn) {
             for (WebSocket sock : conns) {
-                sock.send("System: A player has disconnected. The match has ended.");
+                sock.send("SYSTEM: A player has disconnected. The match has ended.");
             }
         }
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
@@ -54,6 +59,7 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
+        System.out.println(message);
         if (message.equals("_{}*getid")) {
             conn.send(getPlayerId(conn));
 
@@ -66,6 +72,14 @@ public class Server extends WebSocketServer {
                 player1.getWebSocket().send(updateBoard(message));
             }
             turn = !turn;
+            if (turn) {
+                player1.getWebSocket().send("SYSTEM: Player1's turn.");
+                player2.getWebSocket().send("SYSTEM: Player1's turn.");
+            }
+            else{
+                player1.getWebSocket().send("SYSTEM: Player2's turn.");
+                player2.getWebSocket().send("SYSTEM: Player2's turn.");
+            }
             player1.getWebSocket().send(whosTurn());
             player2.getWebSocket().send(whosTurn());
         } else if (message.contains("_{}*hopped1")) {
@@ -84,9 +98,26 @@ public class Server extends WebSocketServer {
             player2.getWebSocket().send(whosTurn());
         } else if (message.contains("_{}*kings1")) {
             player2.getWebSocket().send(message);
+            for (WebSocket sock : conns) {
+                sock.send("SYSTEM: Player1 has crowned a king.");
+            }
         } else if (message.contains("_{}*kings2")) {
             player1.getWebSocket().send(message);
-        } else {
+            for (WebSocket sock : conns) {
+                sock.send("SYSTEM: Player2 has crowned a king.");
+            }
+        }
+        else if (message.equals("_{}*gameover1")){
+            for (WebSocket sock : conns) {
+                sock.send("SYSTEM: Player1 wins!");
+            }
+        }
+        else if (message.equals("_{}*gameover2")){
+            for (WebSocket sock : conns) {
+                sock.send("SYSTEM: Player2 wins!");
+            }
+        }
+        else {
             String sender = "";
             if (player1 != null && player1.getWebSocket() == conn) {
                 sender = "Player1: ";
