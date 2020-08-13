@@ -121,14 +121,6 @@ td{
     border-radius: 50px;
 }
 
-.king.red-piece{
-    background-color: orange;
-}
-
-.king.black-piece{
-    background-color: purple;
-}
-
 @keyframes glowing {
     0% { box-shadow: 0 0 -10px #ffd501; }
     40% { box-shadow: 0 0 20px #ffd501; }

@@ -25,6 +25,7 @@ connection.onmessage = function (e) {
     }
     else if (e.data.includes("_{}*update")){
         updateBoard(e.data.substring(11, e.data.length));
+        setKing();
     }
     else if (e.data.includes("_{}*hopped1")){
         updateP2Pieces(e.data.substring(12, e.data.length));
@@ -34,6 +35,13 @@ connection.onmessage = function (e) {
     }
     else if (e.data.includes("_{}*hpUpdt")){
         updateBoard(e.data.substring(11, e.data.length));
+        setKing();
+    }
+    else if (e.data.includes("_{}*kings1")){
+        p1kings[p1kings.length] = e.data.substring(11, e.data.length);
+    }
+    else if (e.data.includes("_{}*kings2")){
+        p2kings[p2kings.length] = e.data.substring(11, e.data.length);
     }
     else{
         let msg = (getTime() + e.data + "\n");
@@ -127,6 +135,7 @@ function updateP2Pieces(str){
     p2pieces = newP2Pieces;
 }
 
+
 function send(){
     if (document.getElementById("textField").value != null){
         connection.send(document.getElementById("textField").value);
@@ -181,11 +190,8 @@ const board = [
 let p1pieces = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
 let p2pieces = ["12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
 
-let p1piecesCount = 12;
-let p2piecesCount = 12;
-
-let p1move1 = null;
-let p1move2 = null;
+let p1kings = new Array();
+let p2kings = new Array();
 
 let selectedPiece = {
     piece: null,
@@ -211,7 +217,7 @@ function p1Enable(){
 
 function selectPiece(){
     if (selectedPiece.piece != null){
-        selectedPiece.piece.style.border = "1px solid white";
+        selectedPiece.isKing ? selectedPiece.piece.style.border = "1px solid orange" : selectedPiece.piece.style.border = "1px solid white";
         stopListening();
         turnOffHighlights();
     }
@@ -295,8 +301,14 @@ function resetSelectedPiece(){
     selectedPiece.bottomLeftHop = false;
     selectedPiece.bottomRight = false;
     selectedPiece.bottomRightHop = false;
-}
 
+    for (i = 0; i < p1kings.length; i++){
+        document.getElementById(p1kings[i]).style.border = "1px solid orange";
+    }
+    for (i = 0; i < p2kings.length; i++){
+        document.getElementById(p2kings[i]).style.border = "1px solid orange";
+    }
+}
 
 function p2Enable(){
     if (playerId == 2 && !turn){
@@ -306,11 +318,49 @@ function p2Enable(){
     }
 }
 
+function checkKing(val){
+    if (p1pieces.indexOf(board[selectedPiece.tile + val]) != -1 &&
+    p1kings.indexOf(board[selectedPiece.tile + val]) != -1){
+        if (selectedPiece.tile + val >= 56 && selectedPiece.tile + val < 63){
+            p1kings[p1kings.length] = board[selectedPiece.tile + val];
+            selectedPiece.isKing = true;
+            selectedPiece.piece.style.backgroundImage = "url('redCrown.png')";
+            selectedPiece.piece.style.border = "1px solid orange";
+            connection.send("_{}*kings1 " + board[selectedPiece.tile + val]);
+        }
+    }
+    else if (p2pieces.indexOf(board[selectedPiece.tile + val]) != -1 &&
+    p2kings.indexOf(board[selectedPiece.tile + val]) != -1){
+        if (selectedPiece.tile + val > 0 && selectedPiece.tile + val <= 7){
+            p2kings[p2kings.length] = board[selectedPiece.tile + val];
+            selectedPiece.isKing = true;
+             selectedPiece.piece.style.backgroundImage = "url('blackCrown.png')";
+             selectedPiece.piece.style.border = "1px solid orange";
+             connection.send("_{}*kings2 " + board[selectedPiece.tile + val]);
+        }
+    }
+}
+
+function setKing(){
+    for (i = 0; i < p1kings.length; i++){
+        document.getElementById(p1kings[i]).style.backgroundImage = "url('redCrown.png')";
+        document.getElementById(p1kings[i]).style.border = "1px solid orange";
+    }
+    for (i = 0; i < p2kings.length; i++){
+        document.getElementById(p2kings[i]).style.backgroundImage = "url('blackCrown.png')";
+        document.getElementById(p2kings[i]).style.border = "1px solid orange";
+    }
+    if (p1kings.indexOf(board[selectedPiece.tile]) != -1 || p2kings.indexOf(board[selectedPiece.tile]) != -1){
+        selectedPiece.isKing = true;
+        selectedPiece.piece.style.border = "2px solid #34FF01";
+    }
+}
 
 function findMoves(piece){
     if (!hopped){
         selectedPiece.tile = getIndex(piece.id);
     }
+    setKing();
     // top tiles
     if (selectedPiece.tile >= 1 && selectedPiece.tile <= 5){
         if (board[selectedPiece.tile + 7] == null) {
@@ -704,8 +754,11 @@ function bottomLeftEnable(){
      `<p class="black-piece" id="${selectedPiece.piece.id}"></p?>`;
     }
 
+     checkKing(7);
+     setKing();
      turnOffHighlights();
      stopListening();
+
 
      if (turn){
         updateP2();
@@ -730,6 +783,8 @@ function bottomRightEnable(){
          `<p class="black-piece" id="${selectedPiece.piece.id}"></p?>`;
     }
 
+    checkKing(9);
+    setKing();
      turnOffHighlights();
      stopListening();
 
@@ -756,6 +811,8 @@ function topLeftEnable(){
          `<p class="black-piece" id="${selectedPiece.piece.id}"></p?>`;
         }
 
+        checkKing(-9);
+        setKing();
      turnOffHighlights();
      stopListening();
 
@@ -782,6 +839,8 @@ function topRightEnable(){
          `<p class="black-piece" id="${selectedPiece.piece.id}"></p?>`;
         }
 
+        checkKing(-7);
+        setKing();
      turnOffHighlights();
      stopListening();
 
@@ -817,12 +876,14 @@ function bottomLeftHopEnable(){
     board[selectedPiece.tile + 7] = null;
     hopped = true;
 
+    checkKing(14);
      turnOffHighlights();
      stopListening();
      refresh();
 
      selectedPiece.piece = document.getElementById(piece);
      selectedPiece.tile = tile;
+     setKing();
      findMoves(selectedPiece.piece);
 
      if (turn){
@@ -868,12 +929,14 @@ function bottomRightHopEnable(){
     board[selectedPiece.tile + 9] = null;
     hopped = true;
 
+    checkKing(18);
      turnOffHighlights();
      stopListening();
      refresh();
 
      selectedPiece.piece = document.getElementById(piece);
      selectedPiece.tile = tile;
+     setKing();
      findMoves(selectedPiece.piece);
 
      if (turn){
@@ -919,12 +982,14 @@ function topLeftHopEnable(){
     board[selectedPiece.tile - 9] = null;
     hopped = true;
 
+    checkKing(-18);
      turnOffHighlights();
      stopListening();
      refresh();
 
      selectedPiece.piece = document.getElementById(piece);
      selectedPiece.tile = tile;
+     setKing();
      findMoves(selectedPiece.piece);
 
      if (turn){
@@ -971,12 +1036,14 @@ function topRightHopEnable(){
     board[selectedPiece.tile - 7] = null;
     hopped = true;
 
+    checkKing(-14);
      turnOffHighlights();
      stopListening();
      refresh();
 
      selectedPiece.piece = document.getElementById(piece);
      selectedPiece.tile = tile;
+     setKing();
      findMoves(selectedPiece.piece);
 
      if (turn){
@@ -1086,6 +1153,7 @@ function updateP1(anotherHop){
         }
         else{
             hopped = false;
+            resetSelectedPiece();
             connection.send("_{}*update " + board.join());
         }
     }
@@ -1102,6 +1170,7 @@ function updateP2(anotherHop){
         }
         else{
             hopped = false;
+            resetSelectedPiece();
             connection.send("_{}*update " + board.join());
         }
     }
