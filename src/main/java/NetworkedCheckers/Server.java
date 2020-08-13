@@ -69,6 +69,24 @@ public class Server extends WebSocketServer {
             player1.getWebSocket().send(whosTurn());
             player2.getWebSocket().send(whosTurn());
         }
+        else if (message.contains("_{}*hopped1")) {
+            player1.getWebSocket().send(message);
+            player2.getWebSocket().send(message);
+        }
+        else if (message.contains("_{}*hopped2")) {
+            player1.getWebSocket().send(message);
+            player2.getWebSocket().send(message);
+        }
+        else if (message.contains("_{}*hpUpdt")){
+            if (turn){
+                player2.getWebSocket().send(updateBoard(message));
+            }
+            else{
+                player1.getWebSocket().send(updateBoard(message));
+            }
+            player1.getWebSocket().send(whosTurn());
+            player2.getWebSocket().send(whosTurn());
+        }
         else {
             String sender = "";
             if (player1 != null && player1.getWebSocket() == conn) {
